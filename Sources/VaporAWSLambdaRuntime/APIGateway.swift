@@ -76,15 +76,12 @@ extension Vapor.Request {
     }
 }
 
-extension APIGateway.Request
-{
-    var url : Vapor.URI
-    {
-		if let query = queryStringParameters
-		{
-			return Vapor.URI(path: path,query: query.map { "\($0.key)=\($0.value)" }.joined())	
-		}
-		return Vapor.URI(path: path)
+extension APIGateway.Request {
+    var url : Vapor.URI {
+        if let query = queryStringParameters {
+            return Vapor.URI(path: path, query: query.map { "\($0.key)=\($0.value)" }.joined(separator:"&"))
+        }
+        return Vapor.URI(path: path)
     }
 }
 

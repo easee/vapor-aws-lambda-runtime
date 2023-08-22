@@ -63,7 +63,7 @@ extension Vapor.Request {
         self.init(
             application: application,
             method: NIOHTTP1.HTTPMethod(rawValue: req.httpMethod.rawValue),
-            url: Vapor.URI(path: req.path),
+            url: req.url,
             version: HTTPVersion(major: 1, minor: 1),
             headers: nioHeaders,
             collectedBody: buffer,
@@ -73,6 +73,18 @@ extension Vapor.Request {
         )
 
         storage[APIGateway.Request.self] = req
+    }
+}
+
+extension APIGateway.Request
+{
+    var url : Vapor.URI
+    {
+		if let query = queryStringParameters
+		{
+			return Vapor.URI(path: path,query: query.map { "\($0.key)=\($0.value)" }.joined())	
+		}
+		return Vapor.URI(path: path)
     }
 }
 
